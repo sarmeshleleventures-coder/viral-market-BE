@@ -10,7 +10,9 @@ const start = async () => {
       console.warn("⚠️  DATABASE_URL not set — starting without DB.");
     }
 
-    const server = app.listen(config.port, () => {
+    // Bind to 0.0.0.0 so Render (and any host) can reach the server,
+    // not just the IPv6 loopback.
+    const server = app.listen(config.port, "0.0.0.0", () => {
       console.log(`🚀 Server running in ${config.nodeEnv} mode on port ${config.port}`);
     });
 

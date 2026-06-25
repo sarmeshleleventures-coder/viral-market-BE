@@ -19,6 +19,11 @@ if (config.nodeEnv !== "test") {
   app.use(morgan(config.nodeEnv === "production" ? "combined" : "dev"));
 }
 
+// Root
+app.get("/", (req, res) => {
+  res.json({ service: "viral-market-be", status: "running" });
+});
+
 // Health check (includes live database ping)
 app.get("/health", async (req, res) => {
   let db = "not_configured";
