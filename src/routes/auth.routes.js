@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { signup, login } from "../controllers/auth.controller.js";
+import { signup, login, refresh, logout } from "../controllers/auth.controller.js";
 import { requireAuth } from "../middleware/auth.js";
 import { findUserById } from "../models/user.model.js";
 
@@ -83,6 +83,65 @@ router.post("/signup", signup);
  *         description: Invalid credentials
  */
 router.post("/login", login);
+
+/**
+ * @swagger
+ * /api/auth/refresh:
+ *   post:
+ *     summary: Get a new token pair using a refresh token
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [refreshToken]
+ *             properties:
+ *               refreshToken:
+ *                 type: string
+ *                 example: eyJhbGciOiJIUzI1NiIs...
+ *     responses:
+ *       200:
+ *         description: New access and refresh tokens
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 accessToken:
+ *                   type: string
+ *                 refreshToken:
+ *                   type: string
+ *       400:
+ *         description: Missing refresh token
+ *       401:
+ *         description: Invalid, expired, or revoked refresh token
+ */
+router.post("/refresh", refresh);
+
+/**
+ * @swagger
+ * /api/auth/logout:
+ *   post:
+ *     summary: Revoke a refresh token (logout)
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [refreshToken]
+ *             properties:
+ *               refreshToken:
+ *                 type: string
+ *                 example: eyJhbGciOiJIUzI1NiIs...
+ *     responses:
+ *       200:
+ *         description: Logged out
+ */
+router.post("/logout", logout);
 
 /**
  * @swagger

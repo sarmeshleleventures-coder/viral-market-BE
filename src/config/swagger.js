@@ -34,7 +34,8 @@ const options = {
           type: "object",
           properties: {
             user: { $ref: "#/components/schemas/User" },
-            token: { type: "string", example: "eyJhbGciOiJIUzI1NiIs..." },
+            accessToken: { type: "string", example: "eyJhbGciOiJIUzI1NiIs..." },
+            refreshToken: { type: "string", example: "eyJhbGciOiJIUzI1NiIs..." },
           },
         },
       },
