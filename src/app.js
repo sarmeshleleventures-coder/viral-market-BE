@@ -4,6 +4,7 @@ import helmet from "helmet";
 import morgan from "morgan";
 
 import { config } from "./config/env.js";
+import { query } from "./config/db.js";
 import routes from "./routes/index.js";
 import { notFound, errorHandler } from "./middleware/error.js";
 
@@ -18,9 +19,25 @@ if (config.nodeEnv !== "test") {
   app.use(morgan(config.nodeEnv === "production" ? "combined" : "dev"));
 }
 
-// Health check
-app.get("/health", (req, res) => {
-  res.json({ status: "ok", uptime: process.uptime() });
+// Health check (includes live database ping)
+app.get("/health", async (req, res) => {
+  let db = "not_configured";
+  if (config.databaseUrl) {
+    try {
+      const result = await query("SELECT NOW() AS now");
+      db = "connected";
+      return res.json({
+        status: "ok",
+        db,
+        dbTime: result.rows[0].now,
+        uptime: process.uptime(),
+      });
+    } catch (err) {
+      db = "error";
+      return res.status(503).json({ status: "degraded", db, error: err.message });
+    }
+  }
+  res.json({ status: "ok", db, uptime: process.uptime() });
 });
 
 // API routes
