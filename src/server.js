@@ -1,11 +1,13 @@
 import app from "./app.js";
 import { config } from "./config/env.js";
 import { connectDB } from "./config/db.js";
+import { runMigrations } from "./db/migrate.js";
 
 const start = async () => {
   try {
     if (config.databaseUrl) {
       await connectDB();
+      await runMigrations();
     } else {
       console.warn("⚠️  DATABASE_URL not set — starting without DB.");
     }

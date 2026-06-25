@@ -1,12 +1,12 @@
 import { Router } from "express";
+import authRoutes from "./auth.routes.js";
 
 const router = Router();
-
-// Mount feature routers here, e.g.:
-// router.use("/users", userRoutes);
 
 router.get("/", (req, res) => {
   res.json({ message: "Viral Market API v1" });
 });
+
+router.use("/auth", authRoutes);
 
 export default router;

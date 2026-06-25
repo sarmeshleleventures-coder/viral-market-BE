@@ -2,9 +2,11 @@ import express from "express";
 import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
+import swaggerUi from "swagger-ui-express";
 
 import { config } from "./config/env.js";
 import { query } from "./config/db.js";
+import { swaggerSpec } from "./config/swagger.js";
 import routes from "./routes/index.js";
 import { notFound, errorHandler } from "./middleware/error.js";
 
@@ -44,6 +46,9 @@ app.get("/health", async (req, res) => {
   }
   res.json({ status: "ok", db, uptime: process.uptime() });
 });
+
+// Swagger API docs
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // API routes
 app.use("/api", routes);
